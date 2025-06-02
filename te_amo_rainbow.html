@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Te Amo en 100 Idiomas</title>
+  <style>
+    body {
+      background-color: #000;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+      color: white;
+    }
+    .heart {
+      position: relative;
+      width: 300px;
+      height: 270px;
+      transform: scale(2);
+      animation: heartbeat 1.5s infinite;
+      z-index: 2;
+    }
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(2); }
+      50% { transform: scale(2.2); }
+    }
+    .rainbow-text {
+      position: absolute;
+      font-size: 8px;
+      font-weight: bold;
+      animation: rainbow 5s linear infinite;
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      background-image: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet);
+      background-size: 1400% 100%;
+      white-space: nowrap;
+    }
+    @keyframes rainbow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0;
+      animation: twinkle 3s infinite ease-in-out;
+      z-index: 1;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+    .particle {
+      position: absolute;
+      font-size: 8px;
+      color: pink;
+      opacity: 0.3;
+      z-index: 1;
+    }
+    .god-love {
+      position: absolute;
+      top: 10px;
+      width: 100%;
+      text-align: center;
+      font-size: 24px;
+      color: white;
+      z-index: 3;
+      text-shadow: 0 0 10px #0ff;
+    }
+    .versiculo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 250px;
+      text-align: center;
+      font-size: 12px;
+      font-style: italic;
+      color: #fffacd;
+      text-shadow: 0 0 6px #ff4081;
+      font-weight: 600;
+      z-index: 4;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="god-love">Dios te ama</div>
+
+  <div class="heart" id="love-container"></div>
+  <div class="versiculo">
+    «La mujer virtuosa es la corona de su marido;<br/>
+    Mas la que lo avergüenza es como podredumbre en sus huesos.»<br/>
+    <small>— Proverbios 12:4</small>
+  </div>
+
+  <audio autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2023/03/09/audio_7b3c4a7f07.mp3?filename=videoclub-la-nuit-141784.mp3" type="audio/mpeg" />
+    Tu navegador no soporta audio HTML5.
+  </audio>
+
+  <script>
+    const translations = [
+      "Te amo", "I love you", "Je t'aime", "Ti amo", "Ich liebe dich",
+      "Eu te amo", "S'agapo", "Aishiteru", "Saranghae", "Ani ohevet otcha",
+      "Ich hab dich lieb", "Volim te", "Jeg elsker dig", "Jeg elsker deg",
+      "Ik hou van jou", "Te iubesc", "T'estimo", "Milujem ta", "Ya tebya lyublyu",
+      "Egaprisa", "Mo ni fe re", "Mahal kita", "Inhobbok", "Mi amas vin",
+      "Taim i' ngra leat", "Phom rak khun", "Main tumse pyaar karta hoon",
+      "Kocham cie", "Mi te amo", "Amo-te", "Ngiyakuthanda", "Rwy'n dy garu di",
+      "Ani ohev otach", "Ljubim te", "Kimi o ai shiteru", "Ek het jou lief",
+      "Ndagukunda", "Jeg elsker dig", "Is breá liom tú", "Tôi yêu bạn",
+      "Mo nifẹ rẹ", "Aku cinta kamu", "Ich lieb dich", "Ben seni seviyorum",
+      "Te iubesc", "Aloha wau ia oe", "Eg elski teg", "Mi amas vin",
+      "Mina rakastan sinua", "Seni seviyorum", "Aishiteru yo", "Kocham cię",
+      "Ngiyakuthanda", "T'estime", "Seni seviyorum", "Jeg elsker dig",
+      "Me ftares", "Ti voglio bene", "Ya lyublyu tebya", "Te dua",
+      "Ana behibek", "Ek is lief vir jou", "Mahal kita", "Eu amo você",
+      "Ana behibak", "Mi amas vin", "Amo-vos", "Unë të dua", "Wo ai ni",
+      "Ich liebe dich", "Tôi yêu em", "Mi amas vin", "Taim i' ngra leat",
+      "Ma armastan sind", "Mi amas vin", "Es tevi milu", "Ekh doostet daram",
+      "Yeu em", "Bahibik", "Ana uhibbuka", "Egaprisa", "Ngiyakuthanda",
+      "Mina rakastan sinua", "Mi amas vin", "Kocham cię", "Ben seni seviyorum",
+      "Mo ni fe re", "Ek is lief vir jou", "Mi amas vin", "Aishiteru", "Je t’aime de tout mon cœur",
+      "Ti amo con tutta l'anima", "I love you with all that I am",
+      "Te quiero más que a nada", "Eu te amo com tudo que sou"
+    ];
+
+    const container = document.getElementById("love-container");
+    const heartPoints = [];
+
+    for (let t = 0; t < Math.PI * 2; t += 0.0628) {
+      const x = 16 * Math.pow(Math.sin(t), 3);
+      const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+      heartPoints.push({ x, y });
+    }
+
+    const scale = 10;
+    heartPoints.forEach((pt, index) => {
+      if (index >= translations.length) return;
+      const phrase = translations[index];
+      const div = document.createElement("div");
+      div.className = "rainbow-text";
+      div.style.left = `${150 + pt.x * scale}px`;
+      div.style.top = `${135 - pt.y * scale}px`;
+      container.appendChild(div);
+      div.textContent = phrase;
+    });
+
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement("div");
+      star.className = "star";
+      star.style.left = Math.random() * 100 + "vw";
+      star.style.top = Math.random() * 100 + "vh";
+      star.style.animationDelay = Math.random() * 3 + "s";
+      document.body.appendChild(star);
+    }
+
+    for (let i = 0; i < 50; i++) {
+      const particle = document.createElement("div");
+      particle.className = "particle";
+      particle.textContent = "♥";
+      particle.style.left = Math.random() * 100 + "vw";
+      particle.style.top = Math.random() * 100 + "vh";
+      document.body.appendChild(particle);
+    }
+  </script>
+</body>
+</html>
